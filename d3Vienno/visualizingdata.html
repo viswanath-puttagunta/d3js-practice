@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+
+<head>
+	<title>D3 tutorial </title>
+	<script src="http://d3js.org/d3.v2.min.js"> </script>
+</head>
+
+<body>
+
+	<script>
+		var dataArray = [20, 40, 50];
+
+		var canvas = d3.select("body")
+		  .append("svg")
+		  .attr("width", 500)
+		  .attr("height", 500);
+
+		var bars = canvas.selectAll("rect")   // since no rectangles, return empty ref
+				.data(dataArray)    // binds data array to references
+				.enter()	    // returns ref to each rect that is not associated with any data.
+						    // In this case, enters here 3 times.. since none of data is associated.
+				    .append("rect")
+				    .attr("width", function(d) { return d*5;}) 
+				    .attr("height", 50)
+				    .attr("y", function(d, i) { return i*100});
+	</script>
+</body>
+</html>
