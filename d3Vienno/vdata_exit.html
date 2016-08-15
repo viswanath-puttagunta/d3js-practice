@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+
+<head>
+	<title>D3 tutorial </title>
+	<script src="http://d3js.org/d3.v3.min.js"> </script>
+</head>
+
+<body>
+
+<script>
+	var data = [10];
+	var canvas = d3.select("body")
+			.append("svg")
+			.attr("width", 500)
+			.attr("height", 500);
+
+	var circle1 = canvas.append("circle")
+			.attr("cx",25)
+			.attr("cy",25)
+			.attr("r",10);
+
+	var circle2 = canvas.append("circle")
+			.attr("cx",100)
+			.attr("cy",25)
+			.attr("r",10);
+
+	var circles = canvas.selectAll("circle")
+			.data(data)		// only one element in data array. so only bound to circle1 (update)
+			.attr("fill","red")
+			.exit()   // returns reference to circle2
+			  .attr("fill", "blue");
+</script>
+</body>
+</html>
