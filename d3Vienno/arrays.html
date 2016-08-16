@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+<head>
+	<title>D3 tutorial</title>
+	<script src="http://d3js.org/d3.v3.min.js"></script>
+</head>
+
+<body>
+<script>
+	var data = [10,20,30,40,50];
+	var newp = d3.select("body")
+	
+	newp.append("p").text("data: " + data)
+	newp.append("p").text("data.shift(): " + data.shift())
+	newp.append("p").text("data.sort(d3.descending): " + data.sort(d3.descending))
+	newp.append("p").text("d3.min(data): " + d3.min(data))
+	newp.append("p").text("d3.extent(data): " + d3.extent(data))   //min and max
+	newp.append("p").text("d3.sum(data): " + d3.sum(data))
+</script>
+</body>
+
+</html>
+
