@@ -7,33 +7,46 @@
 
 <body>
 <script>
-	var canvas = d3.select("body").append("svg")
-			.attr("width", 500)
-			.attr("height", 500)
-			.append("g")
-			.attr("transform","translate(50,50)")
+        var canvas = d3.select("body").append("svg")
+                        .attr("width", 500)
+                        .attr("height", 500)
+                        .append("g")
+                        .attr("transform","translate(50,50)")
 
-	var tree = d3.layout.tree()
-			    .size([400,400])
+        var tree = d3.layout.tree()
+                            .size([400,400])
 
-	d3.json("tree.json", function(data) {
-				var nodes = tree.nodes(data)
-						// returns list of nodes
-						// each node: parent, children(array), depth..
-						//       x,y prop: coords to place the node.
-				var links = tree.links(nodes)
-						// returns list of nodes
-						// each node: has "source" and "target" coords
-				var node = canvas.selectAll(".node")
-						.data(nodes)
-						.enter()
-						  .append("g")
-						  .attr("class", "node")
-						  .attr("transform",function(d) {return "translate(" + d.x + "," + d.y + ")"})
-				node.append("circle")
-					.attr("r", 5)
-					.attr("fill", "steelblue")
-			     })
+        d3.json("tree.json", function(data) {
+                                var nodes = tree.nodes(data)
+                                                // returns list of nodes
+                                                // each node: parent, children(array), depth..
+                                                //       x,y prop: coords to place the node.
+                                var links = tree.links(nodes)
+                                                // returns list of nodes
+                                                // each node: has "source" and "target" coords
+                                var node = canvas.selectAll(".node")
+                                                .data(nodes)
+                                                .enter()
+                                                  .append("g")
+                                                  .attr("class", "node")
+                                                  .attr("transform",function(d) {return "translate(" + d.x + "," + d.y + ")"})
+                                node.append("circle")
+                                        .attr("r", 5)
+                                        .attr("fill", "steelblue")
+                                node.append("text")
+                                        .text(function(d) {return d.name})
+
+                                var diagonal = d3.svg.diagonal()
+
+                                canvas.selectAll(".link")  // selectAll with class name "link"
+                                        .data(links)
+                                        .enter()
+                                          .append("path")
+                                          .attr("class", "link")  // here is where "link" class is defined
+                                          .attr("fill", "none")
+                                          .attr("stroke", "#ADADAD")
+                                          .attr("d", diagonal)
+                             })
 
 </script>
 </body>
