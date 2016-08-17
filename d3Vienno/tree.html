@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+<head>
+	<title>D3 Tutorial</title>
+	<script src="http://d3js.org/d3.v3.min.js"></script>
+</head>
+
+<body>
+<script>
+	var canvas = d3.select("body").append("svg")
+			.attr("width", 500)
+			.attr("height", 500)
+			.append("g")
+			.attr("transform","translate(50,50)")
+
+	var tree = d3.layout.tree()
+			    .size([400,400])
+
+	d3.json("tree.json", function(data) {
+				var nodes = tree.nodes(data)
+						// returns list of nodes
+						// each node: parent, children(array), depth..
+						//       x,y prop: coords to place the node.
+				var links = tree.links(nodes)
+						// returns list of nodes
+						// each node: has "source" and "target" coords
+				var node = canvas.selectAll(".node")
+						.data(nodes)
+						.enter()
+						  .append("g")
+						  .attr("class", "node")
+						  .attr("transform",function(d) {return "translate(" + d.x + "," + d.y + ")"})
+				node.append("circle")
+					.attr("r", 5)
+					.attr("fill", "steelblue")
+			     })
+
+</script>
+</body>
+
+</html>
