@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+<head>
+	<title>D3.js Tutorial</title>
+	<script src="http://d3js.org/d3.v3.min.js"></script>
+</head>
+
+<body>
+<script>
+	var canvas = d3.select("body").append("svg")
+			.attr("width",760)
+			.attr("height",700)
+	//https://raw.githubusercontent.com/TNRIS/tx.geojson/master/counties/tx_counties.geojson
+	d3.json("tx_counties.geojson",function(data) {
+	  var group = canvas.selectAll("g")
+				.data(data.features)
+				.enter()
+				  .append("g")
+	  var projection = d3.geo.mercator()
+				.scale(1600)
+				.translate([3000,1200])
+	  var path = d3.geo.path()
+			  .projection(projection) //coords to pixels	
+	  var areas = group.append("path")
+			    .attr("d",path)
+			    .attr("class","area")
+			    .attr("fill","steelblue")	
+/*
+	  group.append("text")
+		.attr("x",function(d) { return path.centroid(d)[0]})
+						//computes center of each polygon
+		.attr("y",function(d) { return path.centroid(d)[1]})
+		.text(function(d) {return d.properties.COUNTY})
+		.attr("text-anchor","middle")
+*/
+	})	
+</script>
+</body>
+
+
+</html>
