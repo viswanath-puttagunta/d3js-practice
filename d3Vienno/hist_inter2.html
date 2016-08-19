@@ -1,0 +1,126 @@
+<!doctype html>
+<html>
+<body>
+	<title>MPG Data</title>
+	<style>
+	  .d3-tip {
+            font-weight: bold;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            border-radius: 5px;
+          }
+
+	  .bar rect {
+	    fill: steelblue;
+	    shape-rendering: crispEdges;
+	  }
+	  .bar rect:hover {
+	    fill: rgba(0,0,0,0.8);  //blackish
+	  }
+	  .axis path, .axis line {
+	    fill: none;
+	    stroke: #000;
+	    shape-rendering: crispEdges;
+	  }
+	</style>
+	<script src="http://d3js.org/d3.v3.min.js"></script>
+	<script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js">
+
+	</script>
+	<script>
+
+	  function mpghist(csvdata) {
+	    var numbins = 12
+	    var width = 450
+	    var height = 250
+	    var margin = {top:10,bottom:50,right:10,left:30}
+	    var map = csvdata.map(function(i) {return parseFloat(i.MPG)}) 
+	    var histogram = d3.layout.histogram()
+				.bins(numbins)
+				(map)
+	    console.log(histogram)
+
+	    var x = d3.scale.linear()
+			.domain([0, d3.max(map)])
+			.range([0,width])
+	    var y = d3.scale.linear()
+			.domain([0, d3.max(histogram.map(
+							function(i) {return i.length}
+							))
+				])
+			.range([0,height])
+	    var yScale = d3.scale.linear()
+                	.domain([0, d3.max(histogram.map(
+                					function(i) {return i.length}
+                					))
+                		])
+                	.range([height, 0])
+
+
+	    var xAxis = d3.svg.axis()
+			   .scale(x)
+			   .orient("bottom")
+	    var yAxis = d3.svg.axis()
+			   .scale(yScale)
+			   .orient("left")
+			   .ticks(4)
+	    var tip = d3.tip()
+			.attr('class','d3-tip')
+			.direction('e')
+			.offset([0,20])
+			.html(function(d) {
+			  return '<p>'+d.length+'</p>'
+			})
+
+	    var canvas = d3.select("#mpg").append("svg")
+			   .attr("height",height+margin.top+margin.bottom)
+			   .attr("width", width+margin.left+margin.right)
+			   .append("g")
+			   .attr("transform","translate("
+					    +margin.left +","
+					    +margin.top+ ")")
+	    canvas.call(tip)
+	    canvas.append("g")
+		  .attr("class","x axis")
+		  .attr("transform","translate(0,"+height+")")
+		  .call(xAxis)
+	    canvas.append("text")
+		  .text("MPG")
+		  .attr("x", width/2)
+		  .attr("y", height+margin.bottom)
+
+	    canvas.append("g")
+		   .attr("class","y axis")
+		   .call(yAxis)
+
+	    canvas.append("text")
+		  .attr("y",0-margin.left-5)
+		  .attr("x",0-(height/2))
+		  .attr("dy","1em")
+		  .attr("transform","rotate(-90)")
+		  .style("text-anchor", "middle")
+		  .text("#entries")
+
+	    var bars = canvas.selectAll(".bar")
+			     .data(histogram)
+			     .enter()
+				.append("g")
+				.attr("class","bar")
+	    bars.append("rect")
+		.attr("x",function(d) {return x(d.x)})
+		.attr("y",function(d) {return height-y(d.y)})
+		.attr("width",function(d) {return x(d.dx)-2})
+		.attr("height",function(d) {return y(d.y)})
+		.on('mouseover',tip.show)
+		.on('moverout',tip.hide)
+
+	  }
+
+	  d3.csv("prius_gas.csv", function(error, csvdata){
+	    mpghist(csvdata);
+	  })
+	</script>
+	<div id="mpg" class="graph"></div>
+</body>
+</html>
