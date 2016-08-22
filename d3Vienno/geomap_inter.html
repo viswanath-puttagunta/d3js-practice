@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+<head>
+	<title>D3.js Tutorial</title>
+	<script src="http://d3js.org/d3.v3.min.js"></script>
+	<script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js">
+	</script>
+</head>
+
+<body>
+	<style>
+	  .d3-tip {
+		font-weight: bold;
+		padding: 12px;
+		background: rgba(0,0,0,0.8);
+		color: #fff;
+		border-radius: 5px;
+	  }
+	  .area path {
+		fill: steelblue;
+	  }
+	  .area path:hover {
+		fill: rgba(0,0,0,0.8)
+	  }
+	</style>
+
+<script>
+	//https://raw.githubusercontent.com/TNRIS/tx.geojson/master/counties/tx_counties.geojson
+	var canvas = d3.select("body").append("svg")
+			.attr("width",760)
+			.attr("height",700)
+	
+	var tip = d3.tip()
+		    .attr("class","d3-tip")
+		    .direction("e")
+		    .offset([0,20])
+		    .html(function(d) {
+			return '<p>' + d.properties.COUNTY + '</p>'
+		    })
+	canvas.call(tip)
+
+	d3.json("tx_counties.geojson",function(data) {
+	  var group = canvas.selectAll(".area")
+				.data(data.features)
+				.enter()
+				  .append("g")
+				  .attr("class","area")
+	  var projection = d3.geo.mercator()
+				.scale(1600)
+				.translate([3000,1200])
+	  var path = d3.geo.path()
+			  .projection(projection) //coords to pixels	
+	  var areas = group.append("path")
+			    .attr("d",path)
+			    .on('mouseover',tip.show)
+			    .on('mouseout',tip.hide)
+	})	
+</script>
+</body>
+
+
+</html>
